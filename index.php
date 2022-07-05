@@ -1,24 +1,44 @@
 <?php
-  include_once("config/url.php");
+  include_once("templates/header.php");
 ?>
-
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agenda de contatos</title>
-  <!-- BOOTSTRAP -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" integrity="sha512-GQGU0fMMi238uA+a/bdWJfpUGKUkBdgfFdgBm72SUQ6BeyWjoY/ton0tEjH+OSH9iP4Dfh+7HM0I9f5eR0L/4w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <!-- FONT AWESOME -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <!-- CSS -->
-  <link rel="stylesheet" href="<?= $BASE_URL ?>/css/styles.css">
-</head>
-<body>
-  <h1>Testando agenda</h1>
-  <i class="fas fa-eye"></i>
-  
-</body>
-</html>
+  <div class="container">
+    <?php if(isset($printMSG) && $printMSG != '') : ?>
+      <p id="msg"><?= $printMSG; ?></p>
+    <?php endif; ?>
+    <h1 id="main-title">Minha Agenda</h1>
+    <?php if(count($contacts) > 0): ?>
+      <table class="table" id="contacts-table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Telefone</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach($contacts as $contact):?>
+            <tr>
+              <td scope="row" class="col-id"><?= $contact['id']; ?></td>
+              <td scope="row" ><?= $contact['name']; ?></td>
+              <td scope="row" ><?= $contact['phone']; ?></td>
+              <td class="actions">
+                <a href="<?= $BASE_URL ?>/show.php?id=<?= $contact['id']; ?>"><i class="fas fa-eye check-icon"></i></a>
+                <a href="<?= $BASE_URL ?>/edit.php?id=<?= $contact['id']; ?>"><i class="far fa-edit edit-icon"></i></a>
+                <form class="delete-form" action="<?= $BASE_URL ?>/config/process.php" method="POST">
+                  <input type="hidden" name="type" value="delete">
+                  <input type="hidden" name="id" value="<?= $contact['id']; ?>">
+                  <button type="submit" class="delete-btn"><i class="fas fa-times delete-icon"></i></button>
+                </form>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>        
+      </table>
+    <?php else: ?>
+      <p id="empty-list-text">Ainda não há contatos, <a href="<?= $BASE_URL ?>/create.php">clique aqui para adicionar</a></p>
+    <?php endif; ?>
+  </div>
+<?php
+  include_once("templates/footer.php");
+?>
